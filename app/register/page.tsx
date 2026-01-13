@@ -1,5 +1,5 @@
 export default function Page() {
 return (
-    <div>Register Page</div>
+    <div>Register Page Can Register</div>
 );
 }

@@ -391,7 +391,7 @@ export default function Page() {
                             className="w-full bg-[#006241] text-white py-5 rounded-2xl font-black text-sm shadow-xl shadow-green-100 hover:bg-[#004d33] transition-all uppercase tracking-widest"
                             onClick={() => { alert('Order Confirmed!'); setCart([]); setSelectedTable(null); }}
                         >
-                            Confirm Order & Print
+                            Confirm Order & Printout
                         </button>
                     </div>
                 </aside>
