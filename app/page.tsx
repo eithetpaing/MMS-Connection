@@ -19,7 +19,6 @@ export default function Page() {
         <Link href="/dashboard"
           className="inline-block border border-gray-300 hover:bg-blue-400 px-8 py-3 dark:border-white/10">
           Dashboard
-
         </Link>
       </nav>
     </header>
