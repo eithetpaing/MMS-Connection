@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Log in to your account",
+};
+
 export default function Page() {
   return (
     <div className='flex items-center justify-center min-h-screen bg-white dark:bg-white/30'>
