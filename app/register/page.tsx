@@ -1,92 +1,185 @@
+"use client";
 
-import { Metadata } from "next";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Register",
-  description: "Create a new account",
-};
-
 export default function Page() {
-return (
-    <div className='flex items-center justify-center min-h-screen bg-white dark:bg-white/30'>
-      <form className='flex flex-col items-center  border border-gray-300 min-h-screen w-90 lg:w-xl lg:my-10 bg-white/30 dark:bg-black dark:text-white'>
-        <div className='flex flex-col items-center py-5'>
-          <h1 className='font-bold text-2xl pt-3'>Sign up for your account</h1>
-          <p className='text-gray-500 text-sm'>Enter your email, name and password below to register</p>
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState<string>("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [errors, setErrors] = useState({
+    email: false,
+    firstName: false,
+    lastName: false,
+    password: false,
+    confirmPassword: false,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newErrors = {
+        email: false,
+        firstName: false,
+        lastName: false,
+        password: false,
+        confirmPassword: false,
+      };
+
+    // Email validation
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = true;
+    }
+
+    // Name validation
+    if (/\d/.test(firstName)) {
+      newErrors.firstName = true;
+    }
+    if (/\d/.test(lastName)) {
+      newErrors.lastName = true;
+    }
+
+    // Password validation
+    if (password.length < 6) {
+      newErrors.password = true;
+    }
+    if (password !== confirmPassword || confirmPassword.length < 6) {
+      newErrors.confirmPassword = true;
+    }
+
+    setErrors(newErrors);
+    if (Object.values(newErrors).some(Boolean)) return;
+
+    router.push("/login");
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-white/30">
+      <form onSubmit={handleSubmit}
+        className="flex flex-col items-center border border-gray-300 min-h-screen w-90 lg:w-xl lg:my-10 bg-white/30 dark:bg-black dark:text-white">
+        {/* Head */}
+        <div className="flex flex-col items-center py-5">
+          <h1 className="font-bold text-2xl pt-3">Sign up for your account</h1>
+          <p className="text-gray-500 text-sm">
+            Enter your email, name and password below to register
+          </p>
         </div>
-        <hr className='w-full my-5 border-gray-300'/>
-                                    {/*input fields*/}
-        <div className=" mx-auto my-5 space-y-4">
-                                   {/* Email */}
+        <hr className="w-full my-5 border-gray-300" />
+        {/* Inputs */}
+        <div className="flex flex-col items-center mx-auto my-5 space-y-4">
+          {/* Email */}
           <div className='flex flex-col space-y-2'>
             <label htmlFor="email" 
               className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <input type="email" id="email" placeholder="you@gmail.com"
-              className="mt-1 w-50 lg:w-sm border border-gray-300  p-3  text-sm"/>
+            <input type="email" value={email}
+              onChange={(e) => {
+                const val = e.target.value;
+                setEmail(val);
+                setErrors((prev) => ({ ...prev, email: !/\S+@\S+\.\S+/.test(val) }));
+            }}
+              placeholder={errors.email ? "please enter a valid email" : "you@gmail.com"}
+              className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
+                  ${errors.email ? "border-red-500" : "border-gray-300"}`}/>
           </div>
-          <div>
+          {/* First name */}
+           <div className='flex flex-col space-y-2'>
             <label htmlFor="firstName"
               className="block text-sm font-medium text-gray-700">
               First Name
             </label>
-            <input type="text" id="firstName" placeholder="John"
-              className="mt-1 w-50 lg:w-sm border border-gray-300 p-3 text-sm"/>
-            <label htmlFor="lastName"
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => {
+              const val = e.target.value;
+              setFirstName(val);
+              setErrors((prev) => ({ ...prev, firstName: /\d/.test(val) }));
+          }}
+            placeholder={errors.firstName ? "Please do not use number" : "John"}
+            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
+              ${errors.firstName ? "border-red-500" : "border-gray-300"}`}/>
+          </div>
+          {/* Last name */}
+          <div >
+          <div className='flex flex-col space-y-2'>
+           <label htmlFor="lastName"
               className="block text-sm font-medium text-gray-700 mt-4">
               Last Name
             </label>
-            <input type="text" id="lastName" placeholder="Doe"
-              className="mt-1 w-50 lg:w-sm border border-gray-300 p-3 text-sm"/>
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => {
+              const val = e.target.value;
+              setLastName(val);
+              setErrors((prev) => ({ ...prev, lastName: /\d/.test(val) }));
+            }}
+            placeholder={errors.lastName ? "Please do not use number" : "Doe"}
+            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
+              ${errors.lastName ? "border-red-500" : "border-gray-300"}`}/>
           </div>
-                                    {/* Password */}
+          {/* Password */}
           <div className='flex flex-col space-y-2'>
             <label htmlFor="password"
               className="block text-sm font-medium text-gray-700">
                 Create Password
             </label>
-            <input type="password" id="password" placeholder="••••••••"
-              className="mt-1 w-50 lg:w-sm border border-gray-300 p-3 text-sm"/>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => {
+              const val = e.target.value;
+              setPassword(val);
+              setErrors((prev) => ({ ...prev, password: val.length < 6 }));
+          }}
+            placeholder={errors.password ? "password is too short" : "••••••••"}
+            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
+              ${errors.password ? "border-red-500" : "border-gray-300"}`}/>
+          </div>
+          {/* Confirm password */}
           </div>
            <div className='flex flex-col space-y-2'>
             <label htmlFor="password"
               className="block text-sm font-medium text-gray-700">
                 Confirm Password
             </label>
-            <input type="password" id="password" placeholder="••••••••"
-              className="mt-1 w-50 lg:w-sm border border-gray-300 p-3 text-sm"/>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => {
+              const val = e.target.value;
+              setConfirmPassword(val);
+              setErrors((prev) => ({...prev,
+                confirmPassword: val !== password || val.length < 6,}));
+            }}
+            placeholder={errors.confirmPassword ? "password is too short" : "••••••••"}
+            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
+              ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}/>
           </div>
         </div>
-        <hr className='w-full my-5 border-gray-300'/>
-                                    {/* Register Button */}
-        <div className="flex flex-col items-center justify-center w-full mt-5 px-10 space-y-4">
-                                    {/* Privacy Policy Checkbox */}
-          <div className="items-start lg:flex-row space-x-2">
-            <input id="privacy" type="checkbox"
-              className=" mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
-            <label htmlFor="privacy"
-              className="text-sm text-gray-600 leading-5">
-                I agree to the{" "}
-                <a href="/privacy" className="text-blue-600 hover:underline">
-                  Privacy Policy
-                </a>{" "}and{" "}
-                <a href="/terms" className="text-blue-600 hover:underline">
-                  Terms of Service
-                </a>
-            </label>
-          </div>
-          <button type="submit"
-            className="w-50 lg:w-sm bg-blue-600 hover:bg-blue-900 text-white dark:bg-white dark:text-black font-medium py-4  rounded-md mt-1">
-              Register
-          </button>
-        </div>
-                                    {/* Sign up link */}
-        <div>
-          <p className='text-gray-500 text-sm mt-5 mb-5'>If you have an account, <Link href='/login' className='text-blue-600 underline'>Log in</Link></p>
-        </div>
+        <hr className="w-full my-5 border-gray-300" />
+        {/* Register */}
+        <button
+          type="submit"
+          className="w-50 lg:w-sm bg-blue-600 hover:bg-blue-900 text-white font-medium py-4 rounded-md">
+          Register
+        </button>
+        {/* Log in link */}
+        <p className="text-gray-500 text-sm mt-5 mb-5">
+          If you have an account,{" "}
+          <Link href="/login" className="text-blue-600 underline">
+            Log in
+          </Link>
+        </p>
       </form>
     </div>
-);
+  );
 }

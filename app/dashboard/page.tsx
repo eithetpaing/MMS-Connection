@@ -127,7 +127,7 @@ export default function Page() {
                         <header className="mb-10 flex justify-between items-end">
                             <div>
                                 <h1 className="text-4xl font-black text-stone-900">Morning, Manager!</h1>
-                                <p className="text-stone-500 font-medium mt-1">Check your store's performance today.</p>
+                                <p className="text-stone-500 font-medium mt-1">Check your store&apos;s performance today.</p>
                             </div>
                             <div className="text-right hidden md:block">
                                 <p className="text-xs font-black text-stone-400 uppercase tracking-widest">Business Date</p>
