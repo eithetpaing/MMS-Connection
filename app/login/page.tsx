@@ -89,10 +89,27 @@ export default function Page() {
         </div>
         <hr className="w-full my-5 border-gray-300" />
         {/* Login Button */}
-        <button type="submit"
-          className="w-50 lg:w-sm bg-blue-600 hover:bg-blue-900 text-white font-medium py-4 rounded-md">
-          Login
-        </button>
+        {/* Privacy Policy Checkbox */}
+        <div className="flex flex-col items-center justify-center w-full mt-5 px-10 space-y-4">
+          <div className="items-start lg:flex-row space-x-2">
+            <input id="privacy" type="checkbox"
+              className=" mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+            <label htmlFor="privacy"
+              className="text-sm text-gray-600 leading-5">
+              I agree to the{" "}
+              <a href="/privacy" className="text-blue-600 hover:underline">
+                Privacy Policy
+              </a>{" "}and{" "}
+              <a href="/terms" className="text-blue-600 hover:underline">
+                Terms of Service
+              </a>
+            </label>
+          </div>
+          <button type="submit"
+            className="w-50 lg:w-sm bg-blue-600 hover:bg-blue-900 text-white font-medium py-4 rounded-md">
+              Login
+          </button>
+        </div>
         {/* Sign up link */}
         <p className="text-gray-500 text-sm mt-5 mb-5">
           Don&apos;t have an account?{" "}
