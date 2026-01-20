@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,6 +12,8 @@ export default function Page() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState<string>("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errors, setErrors] = useState({
@@ -108,7 +111,6 @@ export default function Page() {
               ${errors.firstName ? "border-red-500" : "border-gray-300"}`}/>
           </div>
           {/* Last name */}
-          <div >
           <div className='flex flex-col space-y-2'>
            <label htmlFor="lastName"
               className="block text-sm font-medium text-gray-700 mt-4">
@@ -127,42 +129,49 @@ export default function Page() {
               ${errors.lastName ? "border-red-500" : "border-gray-300"}`}/>
           </div>
           {/* Password */}
-          <div className='flex flex-col space-y-2'>
-            <label htmlFor="password"
-              className="block text-sm font-medium text-gray-700">
-                Create Password
+          <div className="flex flex-col space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Create Password
             </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => {
-              const val = e.target.value;
-              setPassword(val);
-              setErrors((prev) => ({ ...prev, password: val.length < 6 }));
-          }}
-            placeholder={errors.password ? "password is too short" : "••••••••"}
-            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
-              ${errors.password ? "border-red-500" : "border-gray-300"}`}/>
+            <div className="relative">
+              <input type={showPassword ? "text" : "password"} value={password}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPassword(val);
+                  setErrors((prev) => ({ ...prev, password: val.length < 6 }));
+                }}
+                placeholder={errors.password ? "password is too short" : "••••••••"}
+                className={`mt-1 w-50 lg:w-sm p-3 pr-10 text-sm border rounded
+                  ${errors.password ? "border-red-500" : "border-gray-300"}`}/>
+                <button type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+            </div>
           </div>
           {/* Confirm password */}
-          </div>
-           <div className='flex flex-col space-y-2'>
-            <label htmlFor="password"
+          <div className="flex flex-col space-y-2">
+            <label htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700">
                 Confirm Password
             </label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => {
-              const val = e.target.value;
-              setConfirmPassword(val);
-              setErrors((prev) => ({...prev,
-                confirmPassword: val !== password || val.length < 6,}));
-            }}
-            placeholder={errors.confirmPassword ? "password is too short" : "••••••••"}
-            className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
-              ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}/>
+            <div className="relative">
+              <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setConfirmPassword(val);
+                  setErrors((prev) => ({...prev,confirmPassword: val !== password || val.length < 6,}));
+                }}
+                placeholder={errors.confirmPassword ? "passwords do not match" : "••••••••"}
+                className={`mt-1 w-50 lg:w-sm p-3 pr-10 text-sm border rounded
+                          ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}/>
+              <button type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
         </div>
         <hr className="w-full my-5 border-gray-300" />

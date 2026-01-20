@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Eye, EyeOff, } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -7,7 +9,11 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [agree, setAgree] = useState(false);
+  const [agreeError, setAgreeError] = useState(false);
+
 
   const router = useRouter();
 
@@ -32,7 +38,12 @@ export default function Page() {
           } else if (password.length < 6) {
               setPasswordError("Password is incorrect");
               valid = false;
-              }
+            }
+
+        if (!agree) {
+          setAgreeError(true);
+          return;
+          }
 
         if (!valid) return;
           router.push("/dashboard");
@@ -75,39 +86,56 @@ export default function Page() {
             <label className="text-sm font-medium text-gray-700">
               Password
             </label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className={`mt-1 w-50 lg:w-sm p-3 text-sm border rounded
-                ${passwordError ? "border-red-500" : "border-gray-300"}`}/>
-                {
-                passwordError && (<p className="text-red-500 text-xs">{passwordError}</p>)
-                }
-            <a href="#" className="underline text-sm text-center">
+            <div className="relative">
+              <input type={showPassword ? "text" : "password"} value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className={`mt-1 w-50 lg:w-sm p-3 pr-10 text-sm border rounded
+                                ${passwordError ? "border-red-500" : "border-gray-300"}`}/>
+              {/* Eye Icon */}
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            {passwordError && (<p className="text-red-500 text-xs">{passwordError}</p>)}
+            <Link href="/forget" className="underline text-sm text-center">
               Forget Password?
-            </a>
+            </Link>
           </div>
         </div>
         <hr className="w-full my-5 border-gray-300" />
         {/* Login Button */}
-        {/* Privacy Policy Checkbox */}
+        {/* Privacy Policy Checkbox and Sign In*/}
         <div className="flex flex-col items-center justify-center w-full mt-5 px-10 space-y-4">
-          <div className="items-start lg:flex-row space-x-2">
-            <input id="privacy" type="checkbox"
-              className=" mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-            <label htmlFor="privacy"
-              className="text-sm text-gray-600 leading-5">
+          <div className="items-start flex space-x-2">
+            <input id="privacy" type="checkbox" checked={agree}
+              onChange={(e) => {
+                setAgree(e.target.checked);
+                setAgreeError(false);
+              }}
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"/>
+            <label htmlFor="privacy" className="text-sm text-gray-600 leading-5">
               I agree to the{" "}
               <a href="/privacy" className="text-blue-600 hover:underline">
                 Privacy Policy
-              </a>{" "}and{" "}
+              </a>{" "}
+              and{" "}
               <a href="/terms" className="text-blue-600 hover:underline">
                 Terms of Service
               </a>
             </label>
           </div>
-          <button type="submit"
-            className="w-50 lg:w-sm bg-blue-600 hover:bg-blue-900 text-white font-medium py-4 rounded-md">
-              Login
+          {agreeError && (<p className="text-red-500 text-xs">
+                              You must agree to the Privacy Policy and Terms
+                          </p>
+            )}
+          <button type="submit" disabled={!agree}
+            className={`w-50 lg:w-sm font-medium py-4 rounded-md transition
+                      ${agree
+                          ? "bg-blue-600 hover:bg-blue-900 text-white"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}>
+            Login
           </button>
         </div>
         {/* Sign up link */}
